@@ -59,6 +59,7 @@ process.stdin.on('data', (key) => {
     if (key === '\u0003') {
         screens.forEach(screen => {
             if (screen.run) {
+                screen.run.stdin.write(key);
                 screen.run.kill();
             }
         });
