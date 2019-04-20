@@ -2,7 +2,7 @@
 
 import * as spawn from 'cross-spawn';
 import { parse } from 'shell-quote';
-import { ChildProcess } from 'child_process';
+import { ChildProcess, SpawnOptions } from 'child_process';
 
 type Data = Buffer | Uint8Array | string;
 interface ScreenData {
@@ -34,6 +34,10 @@ const dataHistorySize = 100;
 let activeScreen = 0;
 const screens: Screen[] = [];
 
+const spawnOptions: SpawnOptions = {
+    // cwd: process.cwd(),
+};
+
 function clear() {
     process.stdout.write('\x1b[2J');
 }
@@ -59,7 +63,7 @@ function stderr(id: number, data: Data) {
 function start(cmd: string, id: number): ChildProcess {
     const [command, ...args] = parse(cmd, process.env);
 
-    const run = spawn(command as string, args as string[]);
+    const run = spawn(command as string, args as string[], spawnOptions);
 
     run.stdout.on('data', (data) => stdout(id, data));
     run.stderr.on('data', (data) => stderr(id, data));

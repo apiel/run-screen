@@ -20,6 +20,8 @@
         "parallel"
     ],
     "scripts": {
+        "foo": "node test/index.js",
+        "test": "run-screen 'yarn foo' 'yarn foo'",
         "prepublishOnly": "yarn build",
         "start": "ts-node src/index.ts",
         "prebuild": "rm -rf dist/",

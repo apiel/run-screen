@@ -18,6 +18,7 @@ No command to run.
 const dataHistorySize = 100;
 let activeScreen = 0;
 const screens = [];
+const spawnOptions = {};
 function clear() {
     process.stdout.write('\x1b[2J');
 }
@@ -38,7 +39,7 @@ function stderr(id, data) {
 }
 function start(cmd, id) {
     const [command, ...args] = shell_quote_1.parse(cmd, process.env);
-    const run = spawn(command, args);
+    const run = spawn(command, args, spawnOptions);
     run.stdout.on('data', (data) => stdout(id, data));
     run.stderr.on('data', (data) => stderr(id, data));
     run.on('close', (code) => {
