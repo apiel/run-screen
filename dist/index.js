@@ -1,12 +1,21 @@
 #!/usr/bin/env node
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const spawn = require("cross-spawn");
 const shell_quote_1 = require("shell-quote");
+const pidtree = require("pidtree");
+const util_1 = require("util");
 const cmds = process.argv.slice(2);
 if (!cmds.length) {
-    console.log(`
-No command to run.
+    console.log(`No command to run.
 
 > run-screen "command 0" "command 1" "command 2" "... bis 9"
 
@@ -50,19 +59,25 @@ function start(cmd, id) {
 }
 cmds.forEach((cmd, id) => {
     const run = start(cmd, id);
-    screens.push({ run, id, data: [] });
+    screens.push({ run, cmd, id, data: [] });
 });
 process.stdin.setEncoding('ascii');
 process.stdin.setRawMode(true);
 process.stdin.resume();
-process.stdin.on('data', (key) => {
-    if (key === '\u0003') {
-        screens.forEach(screen => {
-            if (screen.run) {
-                screen.run.stdin.write(key);
-                screen.run.kill();
-            }
-        });
+process.stdin.on('data', (key) => __awaiter(this, void 0, void 0, function* () {
+    if (key === '\u0012') {
+        const screen = screens[activeScreen];
+        stdout(activeScreen, `\n\nctrl+r > restart process: ${screen.cmd}\n\n`);
+        try {
+            yield kill(screen);
+            start(screen.cmd, screen.id);
+        }
+        catch (error) {
+            console.log('blah', error);
+        }
+    }
+    else if (key === '\u0003') {
+        yield Promise.all(screens.map(kill));
         process.stdin.resume();
         process.exit();
     }
@@ -74,5 +89,20 @@ process.stdin.on('data', (key) => {
     if (screens[activeScreen].run) {
         screens[activeScreen].run.stdin.write(key);
     }
-});
+}));
+function kill(screen) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (screen.run) {
+            const pids = yield util_1.promisify(pidtree)(screen.run.pid, { root: true });
+            pids.forEach((pid) => {
+                try {
+                    process.kill(pid);
+                }
+                catch (error) {
+                    console.error(`Could not kill ${pid}`);
+                }
+            });
+        }
+    });
+}
 //# sourceMappingURL=index.js.map

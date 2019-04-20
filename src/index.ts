@@ -3,6 +3,8 @@
 import * as spawn from 'cross-spawn';
 import { parse } from 'shell-quote';
 import { ChildProcess, SpawnOptions } from 'child_process';
+import * as pidtree from 'pidtree';
+import { promisify } from 'util';
 
 type Data = Buffer | Uint8Array | string;
 interface ScreenData {
@@ -12,6 +14,7 @@ interface ScreenData {
 
 interface Screen {
     id: number;
+    cmd: string;
     run: ChildProcess;
     data: ScreenData[];
 }
@@ -19,8 +22,7 @@ interface Screen {
 const cmds = process.argv.slice(2);
 if (!cmds.length) {
     // tslint:disable-next-line
-    console.log(`
-No command to run.
+    console.log(`No command to run.
 
 > run-screen "command 0" "command 1" "command 2" "... bis 9"
 
@@ -78,7 +80,7 @@ function start(cmd: string, id: number): ChildProcess {
 
 cmds.forEach((cmd, id) => {
     const run = start(cmd, id);
-    screens.push({ run, id, data: [] });
+    screens.push({ run, cmd, id, data: [] });
 });
 
 // process.stdin.setEncoding('utf8');
@@ -86,14 +88,17 @@ process.stdin.setEncoding('ascii');
 process.stdin.setRawMode(true);
 process.stdin.resume();
 
-process.stdin.on('data', (key) => {
-    if (key === '\u0003') {
-        screens.forEach(screen => {
-            if (screen.run) {
-                screen.run.stdin.write(key);
-                screen.run.kill();
-            }
-        });
+process.stdin.on('data', async (key) => {
+    // console.log('key', key, !!screens[key], key.charCodeAt(0), `\\u00${key.charCodeAt(0).toString(16)}`);
+    if (key === '\u0012') {
+        const screen = screens[activeScreen];
+        stdout(activeScreen, `\n\nctrl+r > restart process: ${screen.cmd}\n\n`);
+        await kill(screen);
+        // start(screen.cmd, screen.id);
+        // setTimeout(() => { start(screen.cmd, screen.id); }, 3000);
+        // console.log('yoyoyoyoy');
+    } else if (key === '\u0003') {
+        await Promise.all(screens.map(kill));
         // clear();
         process.stdin.resume();
         process.exit();
@@ -104,8 +109,20 @@ process.stdin.on('data', (key) => {
             ({ writeStream, data }) => writeStream.write(data),
         );
     }
-    // console.log('key', key, !!screens[key]);
     if (screens[activeScreen].run) {
         screens[activeScreen].run.stdin.write(key);
     }
 });
+
+async function kill(screen: Screen) {
+    if (screen.run) {
+        const pids: number[] = await promisify(pidtree)(screen.run.pid, { root: true });
+        pids.forEach((pid) => {
+            try {
+                process.kill(pid);
+            } catch (error) {
+                console.error(`Could not kill ${pid}`); // tslint:disable-line
+            }
+        });
+    }
+}

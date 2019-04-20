@@ -1,6 +1,6 @@
 {
     "name": "run-screen",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "author": "Alexandre Piel <alexandre.piel@gmail.com>",
@@ -21,7 +21,8 @@
     ],
     "scripts": {
         "foo": "node test/index.js",
-        "test": "run-screen 'yarn foo' 'yarn foo'",
+        "test1": "run-screen 'yarn foo' 'yarn foo'",
+        "test2": "run-screen 'watch uptime' htop",
         "prepublishOnly": "yarn build",
         "start": "ts-node src/index.ts",
         "prebuild": "rm -rf dist/",
@@ -30,6 +31,7 @@
     },
     "dependencies": {
         "cross-spawn": "^6.0.5",
+        "pidtree": "^0.3.0",
         "shell-quote": "^1.6.1",
         "typescript": "^3.2.4"
     },
