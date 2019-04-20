@@ -88,6 +88,11 @@ process.stdin.resume();
 
 process.stdin.on('data', (key) => {
     if (key === '\u0003') {
+        screens.forEach(screen => {
+            if (screen.run) {
+                screen.run.kill();
+            }
+        });
         // clear();
         process.stdin.resume();
         process.exit();

@@ -57,6 +57,11 @@ process.stdin.setRawMode(true);
 process.stdin.resume();
 process.stdin.on('data', (key) => {
     if (key === '\u0003') {
+        screens.forEach(screen => {
+            if (screen.run) {
+                screen.run.kill();
+            }
+        });
         process.stdin.resume();
         process.exit();
     }

@@ -1,2 +1,2 @@
 - rerun screen
-- clean kill process on CTRL+C run.kill()
+- ~~clean kill process on CTRL+C run.kill()~~
