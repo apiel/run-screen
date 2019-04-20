@@ -10,6 +10,15 @@
         "type": "git",
         "url": "https://github.com/apiel/run-screen"
     },
+    "keywords": [
+        "cli",
+        "command",
+        "commandline",
+        "tool",
+        "run",
+        "screen",
+        "parallel"
+    ],
     "scripts": {
         "prepublishOnly": "yarn build",
         "start": "ts-node src/index.ts",
