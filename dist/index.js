@@ -57,7 +57,6 @@ process.stdin.setRawMode(true);
 process.stdin.resume();
 process.stdin.on('data', (key) => {
     if (key === '\u0003') {
-        clear();
         process.stdin.resume();
         process.exit();
     }

@@ -88,7 +88,7 @@ process.stdin.resume();
 
 process.stdin.on('data', (key) => {
     if (key === '\u0003') {
-        clear();
+        // clear();
         process.stdin.resume();
         process.exit();
     } else if (!!screens[key]) {
