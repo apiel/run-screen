@@ -16,10 +16,10 @@ interface Screen {
     data: ScreenData[];
 }
 
-const cmds = [
-    'watch uptime',
-    'htop',
-];
+const cmds = process.argv.slice(2);
+if (!cmds.length) {
+    process.exit();
+}
 
 const dataHistorySize = 100;
 let activeScreen = 0;
