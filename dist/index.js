@@ -65,15 +65,15 @@ process.stdin.setEncoding('ascii');
 process.stdin.setRawMode(true);
 process.stdin.resume();
 process.stdin.on('data', (key) => __awaiter(this, void 0, void 0, function* () {
-    if (key === '\u0012') {
+    if (key === '\u0000') {
         const screen = screens[activeScreen];
-        stdout(activeScreen, `\n\nctrl+r > restart process: ${screen.cmd}\n\n`);
-        try {
+        if (screen.run) {
+            stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.cmd}\n\n`);
             yield kill(screen);
-            start(screen.cmd, screen.id);
         }
-        catch (error) {
-            console.log('blah', error);
+        else {
+            stdout(activeScreen, `\n\nctrl+space > start process: ${screen.cmd}\n\n`);
+            screens[activeScreen].run = start(screen.cmd, screen.id);
         }
     }
     else if (key === '\u0003') {

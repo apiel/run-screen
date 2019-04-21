@@ -13,3 +13,4 @@ run-screen "command 0" "command 1" "command 2" "... bis 9"
 ```
 
 To exit, press key combination `ctrl+C`
+To stop a process, press key combination `ctrl+space`, start again the process by pressing again `ctrl+space`

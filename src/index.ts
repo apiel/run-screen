@@ -28,6 +28,7 @@ if (!cmds.length) {
 
     You can have up to 10 process in parallel, switching from one screen to the other by the numeric key of your keyboard, from 0 to 9.
     To exit, press key combination "ctrl+C"
+    Stop/start process, press key combination "ctrl+space"
     `);
     process.exit();
 }
@@ -89,17 +90,20 @@ process.stdin.setRawMode(true);
 process.stdin.resume();
 
 process.stdin.on('data', async (key) => {
+    // '\u0012' ctrlR
     // console.log('key', key, !!screens[key], key.charCodeAt(0), `\\u00${key.charCodeAt(0).toString(16)}`);
-    if (key === '\u0012') {
+    if (key === '\u0000') { // ctrlSpace
         const screen = screens[activeScreen];
-        stdout(activeScreen, `\n\nctrl+r > restart process: ${screen.cmd}\n\n`);
-        await kill(screen);
-        // start(screen.cmd, screen.id);
-        // setTimeout(() => { start(screen.cmd, screen.id); }, 3000);
-        // console.log('yoyoyoyoy');
+        if (screen.run) {
+            stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.cmd}\n\n`);
+            await kill(screen);
+        } else {
+            stdout(activeScreen, `\n\nctrl+space > start process: ${screen.cmd}\n\n`);
+            screens[activeScreen].run = start(screen.cmd, screen.id);
+        }
     } else if (key === '\u0003') {
         await Promise.all(screens.map(kill));
-        // clear();
+        // clear(); // ??? for htop but in most of the case clearing is not nice
         process.stdin.resume();
         process.exit();
     } else if (!!screens[key]) {
