@@ -21,6 +21,7 @@ if (!cmds.length) {
 
     You can have up to 10 process in parallel, switching from one screen to the other by the numeric key of your keyboard, from 0 to 9.
     To exit, press key combination "ctrl+C"
+    Stop/start process, press key combination "ctrl+space"
     `);
     process.exit();
 }
