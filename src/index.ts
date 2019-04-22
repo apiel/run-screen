@@ -3,7 +3,7 @@
 import * as spawn from 'cross-spawn';
 import { parse } from 'shell-quote';
 import { ChildProcess, SpawnOptions } from 'child_process';
-import { clear, kill, getScreenId } from './utils';
+import { clear, kill, getScreenId, getNextTab, getPrevTab } from './utils';
 
 type Data = Buffer | Uint8Array | string;
 interface ScreenData {
@@ -28,6 +28,8 @@ if (!cmds.length) {
     You can have up to 10 process in parallel, switching from one screen to the other by the numeric key of your keyboard, from 0 to 9.
     To exit, press key combination "ctrl+C"
     Stop/start process, press key combination "ctrl+space"
+    Next screen, press key "tab" or ">"
+    Previous screen, press key "<"
     `);
     process.exit();
 }
@@ -101,14 +103,23 @@ process.stdin.on('data', async (key) => {
         // clear(); // ??? for htop but in most of the case clearing is not nice
         process.stdin.resume();
         process.exit();
+    } else if (key === '\u0009' || key === '>') { // tab
+        setActiveScreen(getNextTab(screens, activeScreen));
+    } else if (key === '<') {
+        setActiveScreen(getNextTab(screens, activeScreen));
+        // setActiveScreen(getPrevTab(screens, activeScreen));
     } else if (!!screens[getScreenId(key)]) {
-        activeScreen = getScreenId(key);
-        clear();
-        screens[activeScreen].data.forEach(
-            ({ writeStream, data }) => writeStream.write(data),
-        );
+        setActiveScreen(getScreenId(key));
     }
     if (screens[activeScreen].run) {
         screens[activeScreen].run.stdin.write(key);
     }
 });
+
+function setActiveScreen(screenId: number) {
+    activeScreen = screenId;
+    clear();
+    screens[activeScreen].data.forEach(
+        ({ writeStream, data }) => writeStream.write(data),
+    );
+}

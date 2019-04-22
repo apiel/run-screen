@@ -38,4 +38,12 @@ function getScreenId(key) {
     return -1;
 }
 exports.getScreenId = getScreenId;
+function getNextTab(screens, activeScreen, direction = 1) {
+    return (activeScreen + direction) % screens.length;
+}
+exports.getNextTab = getNextTab;
+function getPrevTab(screens, activeScreen) {
+    return getNextTab(screens, activeScreen, -1);
+}
+exports.getPrevTab = getPrevTab;
 //# sourceMappingURL=utils.js.map

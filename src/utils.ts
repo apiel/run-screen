@@ -27,3 +27,11 @@ export function getScreenId(key: string) {
     }
     return -1;
 }
+
+export function getNextTab(screens: Screen[], activeScreen: number, direction = 1) {
+    return (activeScreen + direction) % screens.length;
+}
+
+export function getPrevTab(screens: Screen[], activeScreen: number) {
+    return getNextTab(screens, activeScreen, -1);
+}

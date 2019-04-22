@@ -78,13 +78,22 @@ process.stdin.on('data', (key) => __awaiter(this, void 0, void 0, function* () {
         process.stdin.resume();
         process.exit();
     }
+    else if (key === '\u0009' || key === '>') {
+        setActiveScreen(utils_1.getNextTab(screens, activeScreen));
+    }
+    else if (key === '<') {
+        setActiveScreen(utils_1.getNextTab(screens, activeScreen));
+    }
     else if (!!screens[utils_1.getScreenId(key)]) {
-        activeScreen = utils_1.getScreenId(key);
-        utils_1.clear();
-        screens[activeScreen].data.forEach(({ writeStream, data }) => writeStream.write(data));
+        setActiveScreen(utils_1.getScreenId(key));
     }
     if (screens[activeScreen].run) {
         screens[activeScreen].run.stdin.write(key);
     }
 }));
+function setActiveScreen(screenId) {
+    activeScreen = screenId;
+    utils_1.clear();
+    screens[activeScreen].data.forEach(({ writeStream, data }) => writeStream.write(data));
+}
 //# sourceMappingURL=index.js.map
