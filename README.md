@@ -27,4 +27,4 @@ To stop a process, press key combination `ctrl+space`, start again the process b
 
 ![screenshot-dashboard](https://github.com/apiel/run-screen/blob/master/screenshots/screenshot-dashboard.png?raw=true)
 
-The dashboard give you an overview of all the screens, if a new error happen on a screen if will be shown.
+The dashboard give you an overview of all the screens. If a new error happen on a screen, it will be shown.
