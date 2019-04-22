@@ -1,4 +1,10 @@
 console.log(process.cwd());
+let count = 0;
 setInterval(() => {
-    process.stderr.write(`bad error\n`);
+    const [, , error] = process.argv;
+    if (error) {
+        process.stderr.write(`/!\\ ${error}\n`);
+    } else {
+        process.stdout.write(`Refresh ${count++}\n`);
+    }
 }, 1000);

@@ -12,5 +12,19 @@ To use it:
 run-screen "command 1" "command 2" "command 3" "... bis 10"
 ```
 
-To exit, press key combination `ctrl+C`
+To exit, press key combination `ctrl+c`
 To stop a process, press key combination `ctrl+space`, start again the process by pressing again `ctrl+space`
+
+## Action keys
+
+- To exit, press key combination `ctrl+c`
+- Stop/start process, press key combination `ctrl+space`
+- Next screen, press key `>`
+- Previous screen, press key `<`
+- Dashboard, press key `tab`
+
+## Dashboard
+
+![screenshot-dashboard](https://github.com/apiel/run-screen/blob/master/screenshots/screenshot-dashboard.png?raw=true)
+
+The dashboard give you an overview of all the screens, if a new error happen on a screen if will be shown.
