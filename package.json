@@ -21,8 +21,8 @@
     ],
     "scripts": {
         "foo": "node test/index.js",
-        "test1": "run-screen 'yarn foo' 'yarn foo'",
-        "test2": "run-screen 'watch uptime' htop",
+        "test1": "yarn build && run-screen 'yarn foo' 'yarn foo'",
+        "test2": "yarn build && run-screen 'watch uptime' htop",
         "prepublishOnly": "yarn build",
         "start": "ts-node src/index.ts",
         "prebuild": "rm -rf dist/",

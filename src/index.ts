@@ -3,8 +3,7 @@
 import * as spawn from 'cross-spawn';
 import { parse } from 'shell-quote';
 import { ChildProcess, SpawnOptions } from 'child_process';
-import * as pidtree from 'pidtree';
-import { promisify } from 'util';
+import { clear, kill, getScreenId } from './utils';
 
 type Data = Buffer | Uint8Array | string;
 interface ScreenData {
@@ -12,7 +11,7 @@ interface ScreenData {
     data: Data;
 }
 
-interface Screen {
+export interface Screen {
     id: number;
     cmd: string;
     run: ChildProcess;
@@ -40,10 +39,6 @@ const screens: Screen[] = [];
 const spawnOptions: SpawnOptions = {
     // cwd: process.cwd(),
 };
-
-function clear() {
-    process.stdout.write('\x1b[2J');
-}
 
 function stdWrite(writeStream: NodeJS.WriteStream, id: number, data: Data) {
     if (id === activeScreen) {
@@ -106,8 +101,8 @@ process.stdin.on('data', async (key) => {
         // clear(); // ??? for htop but in most of the case clearing is not nice
         process.stdin.resume();
         process.exit();
-    } else if (!!screens[key]) {
-        activeScreen = parseInt(key, 10);
+    } else if (!!screens[getScreenId(key)]) {
+        activeScreen = getScreenId(key);
         clear();
         screens[activeScreen].data.forEach(
             ({ writeStream, data }) => writeStream.write(data),
@@ -117,16 +112,3 @@ process.stdin.on('data', async (key) => {
         screens[activeScreen].run.stdin.write(key);
     }
 });
-
-async function kill(screen: Screen) {
-    if (screen.run) {
-        const pids: number[] = await promisify(pidtree)(screen.run.pid, { root: true });
-        pids.forEach((pid) => {
-            try {
-                process.kill(pid);
-            } catch (error) {
-                console.error(`Could not kill ${pid}`); // tslint:disable-line
-            }
-        });
-    }
-}

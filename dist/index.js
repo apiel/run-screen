@@ -11,8 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const spawn = require("cross-spawn");
 const shell_quote_1 = require("shell-quote");
-const pidtree = require("pidtree");
-const util_1 = require("util");
+const utils_1 = require("./utils");
 const cmds = process.argv.slice(2);
 if (!cmds.length) {
     console.log(`No command to run.
@@ -29,9 +28,6 @@ const dataHistorySize = 100;
 let activeScreen = 0;
 const screens = [];
 const spawnOptions = {};
-function clear() {
-    process.stdout.write('\x1b[2J');
-}
 function stdWrite(writeStream, id, data) {
     if (id === activeScreen) {
         writeStream.write(data);
@@ -70,7 +66,7 @@ process.stdin.on('data', (key) => __awaiter(this, void 0, void 0, function* () {
         const screen = screens[activeScreen];
         if (screen.run) {
             stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.cmd}\n\n`);
-            yield kill(screen);
+            yield utils_1.kill(screen);
         }
         else {
             stdout(activeScreen, `\n\nctrl+space > start process: ${screen.cmd}\n\n`);
@@ -78,32 +74,17 @@ process.stdin.on('data', (key) => __awaiter(this, void 0, void 0, function* () {
         }
     }
     else if (key === '\u0003') {
-        yield Promise.all(screens.map(kill));
+        yield Promise.all(screens.map(utils_1.kill));
         process.stdin.resume();
         process.exit();
     }
-    else if (!!screens[key]) {
-        activeScreen = parseInt(key, 10);
-        clear();
+    else if (!!screens[utils_1.getScreenId(key)]) {
+        activeScreen = utils_1.getScreenId(key);
+        utils_1.clear();
         screens[activeScreen].data.forEach(({ writeStream, data }) => writeStream.write(data));
     }
     if (screens[activeScreen].run) {
         screens[activeScreen].run.stdin.write(key);
     }
 }));
-function kill(screen) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (screen.run) {
-            const pids = yield util_1.promisify(pidtree)(screen.run.pid, { root: true });
-            pids.forEach((pid) => {
-                try {
-                    process.kill(pid);
-                }
-                catch (error) {
-                    console.error(`Could not kill ${pid}`);
-                }
-            });
-        }
-    });
-}
 //# sourceMappingURL=index.js.map
