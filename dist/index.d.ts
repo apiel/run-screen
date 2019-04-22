@@ -11,5 +11,6 @@ export interface Screen {
     cmd: string;
     run: ChildProcess;
     data: ScreenData[];
+    missedError: number;
 }
 export {};

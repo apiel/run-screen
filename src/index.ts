@@ -3,7 +3,8 @@
 import * as spawn from 'cross-spawn';
 import { parse } from 'shell-quote';
 import { ChildProcess, SpawnOptions } from 'child_process';
-import { clear, kill, getScreenId, getNextTab, getPrevTab } from './utils';
+import { kill, getScreenId, getNextTab, getPrevTab } from './utils';
+import { dashboard } from './dashboard';
 
 type Data = Buffer | Uint8Array | string;
 interface ScreenData {
@@ -16,6 +17,7 @@ export interface Screen {
     cmd: string;
     run: ChildProcess;
     data: ScreenData[];
+    missedError: number;
 }
 
 const cmds = process.argv.slice(2);
@@ -28,8 +30,9 @@ if (!cmds.length) {
     You can have up to 10 process in parallel, switching from one screen to the other by the numeric key of your keyboard, from 0 to 9.
     To exit, press key combination "ctrl+C"
     Stop/start process, press key combination "ctrl+space"
-    Next screen, press key "tab" or ">"
+    Next screen, press key ">"
     Previous screen, press key "<"
+    Dashboard, press key "tab"
     `);
     process.exit();
 }
@@ -58,6 +61,16 @@ function stdout(id: number, data: Data) {
 
 function stderr(id: number, data: Data) {
     stdWrite(process.stderr, id, data);
+    handleError(id);
+}
+
+function handleError(id: number) {
+    if (id !== activeScreen) {
+        screens[id].missedError++;
+    }
+    if (activeScreen === -1) {
+        dashboard(screens);
+    }
 }
 
 function start(cmd: string, id: number): ChildProcess {
@@ -78,7 +91,7 @@ function start(cmd: string, id: number): ChildProcess {
 
 cmds.forEach((cmd, id) => {
     const run = start(cmd, id);
-    screens.push({ run, cmd, id, data: [] });
+    screens.push({ run, cmd, id, data: [], missedError: 0 });
 });
 
 // process.stdin.setEncoding('utf8');
@@ -91,35 +104,40 @@ process.stdin.on('data', async (key) => {
     // console.log('key', key, !!screens[key], key.charCodeAt(0), `\\u00${key.charCodeAt(0).toString(16)}`);
     if (key === '\u0000') { // ctrlSpace
         const screen = screens[activeScreen];
-        if (screen.run) {
-            stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.cmd}\n\n`);
-            await kill(screen);
-        } else {
-            stdout(activeScreen, `\n\nctrl+space > start process: ${screen.cmd}\n\n`);
-            screens[activeScreen].run = start(screen.cmd, screen.id);
+        if (screen) {
+            if (screen.run) {
+                stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.cmd}\n\n`);
+                await kill(screen);
+            } else {
+                stdout(activeScreen, `\n\nctrl+space > start process: ${screen.cmd}\n\n`);
+                screens[activeScreen].run = start(screen.cmd, screen.id);
+            }
         }
     } else if (key === '\u0003') {
         await Promise.all(screens.map(kill));
-        // clear(); // ??? for htop but in most of the case clearing is not nice
+        // console.clear(); // ??? for htop but in most of the case clearing is not nice
         process.stdin.resume();
         process.exit();
-    } else if (key === '\u0009' || key === '>') { // tab
+    } else if (key === '\u0009') { // tab
+        activeScreen = -1;
+        dashboard(screens);
+    } else if (key === '>') {
         setActiveScreen(getNextTab(screens, activeScreen));
     } else if (key === '<') {
-        setActiveScreen(getNextTab(screens, activeScreen));
-        // setActiveScreen(getPrevTab(screens, activeScreen));
+        setActiveScreen(getPrevTab(screens, activeScreen));
     } else if (!!screens[getScreenId(key)]) {
         setActiveScreen(getScreenId(key));
     }
-    if (screens[activeScreen].run) {
+    if (screens[activeScreen] && screens[activeScreen].run) {
         screens[activeScreen].run.stdin.write(key);
     }
 });
 
-function setActiveScreen(screenId: number) {
-    activeScreen = screenId;
-    clear();
+function setActiveScreen(id: number) {
+    activeScreen = id;
+    console.clear();
     screens[activeScreen].data.forEach(
         ({ writeStream, data }) => writeStream.write(data),
     );
+    screens[activeScreen].missedError = 0;
 }

@@ -10,10 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const pidtree = require("pidtree");
 const util_1 = require("util");
-function clear() {
-    process.stdout.write('\x1b[2J');
-}
-exports.clear = clear;
 function kill(screen) {
     return __awaiter(this, void 0, void 0, function* () {
         if (screen.run) {
@@ -39,7 +35,7 @@ function getScreenId(key) {
 }
 exports.getScreenId = getScreenId;
 function getNextTab(screens, activeScreen, direction = 1) {
-    return (activeScreen + direction) % screens.length;
+    return Math.abs((activeScreen + direction) % screens.length);
 }
 exports.getNextTab = getNextTab;
 function getPrevTab(screens, activeScreen) {
