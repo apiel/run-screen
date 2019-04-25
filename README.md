@@ -30,7 +30,7 @@ To stop a process, press key combination `ctrl+space`, start again the process b
 
 The dashboard give you an overview of all the screens. If a new error happen on a screen, it will be shown.
 
-## Config file
+## Advance features
 
 Instead to give the command directly as arguments, it is possible to pass them from a config file.
 
