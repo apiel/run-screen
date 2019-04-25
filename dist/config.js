@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
+const color_1 = require("./color");
 function invalidConfigFormat(message) {
     console.log(`Invalid config format
 
@@ -21,13 +22,14 @@ function invalidConfigFormat(message) {
     ],
 }
 
-Before function is of type:
+${color_1.dim(`Before function is of type:
 before: (id: number, screenConfig: ScreenConfig, runScreen: RunScreen) => Promise<void> | void;
 
 After function is of type:
-after: (screen: Screen, runScreen: RunScreen) => Promise<void> | void;
+after: (screen: Screen, runScreen: RunScreen) => Promise<void> | void;`)}
 
-${message}`);
+${color_1.red(message)}
+    `);
     process.exit();
 }
 const defaultKeys = {

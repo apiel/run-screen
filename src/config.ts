@@ -1,5 +1,6 @@
 import { extname } from 'path';
 import { Screen, RunScreen } from './RunScreen';
+import { dim, red } from './color';
 
 function invalidConfigFormat(message: string) {
     console.log( // tslint:disable-line
@@ -22,14 +23,14 @@ function invalidConfigFormat(message: string) {
     ],
 }
 
-Before function is of type:
+${dim(`Before function is of type:
 before: (id: number, screenConfig: ScreenConfig, runScreen: RunScreen) => Promise<void> | void;
 
 After function is of type:
-after: (screen: Screen, runScreen: RunScreen) => Promise<void> | void;
+after: (screen: Screen, runScreen: RunScreen) => Promise<void> | void;`)}
 
-${message}`,
-    );
+${red(message)}
+    `);
     process.exit();
 }
 
