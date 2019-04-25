@@ -5,6 +5,7 @@ import { parse } from 'shell-quote';
 import { ChildProcess, SpawnOptions } from 'child_process';
 import { kill, getScreenId, getNextTab, getPrevTab } from './utils';
 import { dashboard } from './dashboard';
+import { loadConfig, ScreenConfig } from './config';
 
 type Data = Buffer | Uint8Array | string;
 interface ScreenData {
@@ -14,14 +15,14 @@ interface ScreenData {
 
 export interface Screen {
     id: number;
-    cmd: string;
+    config: ScreenConfig;
     run: ChildProcess;
     data: ScreenData[];
     missedError: number;
 }
 
-const cmds = process.argv.slice(2);
-if (!cmds.length) {
+const args = process.argv.slice(2);
+if (!args.length) {
     // tslint:disable-next-line
     console.log(`No command to run.
 
@@ -36,6 +37,8 @@ if (!cmds.length) {
     `);
     process.exit();
 }
+
+const screenConfigs = loadConfig(args);
 
 const dataHistorySize = 100;
 let activeScreen = 0;
@@ -73,10 +76,10 @@ function handleError(id: number) {
     }
 }
 
-function start(cmd: string, id: number): ChildProcess {
-    const [command, ...args] = parse(cmd, process.env);
+function start({ cmd }: ScreenConfig, id: number): ChildProcess {
+    const [command, ...params] = parse(cmd, process.env);
 
-    const run = spawn(command as string, args as string[], spawnOptions);
+    const run = spawn(command as string, params as string[], spawnOptions);
 
     run.stdout.on('data', (data) => stdout(id, data));
     run.stderr.on('data', (data) => stderr(id, data));
@@ -89,9 +92,9 @@ function start(cmd: string, id: number): ChildProcess {
     return run;
 }
 
-cmds.forEach((cmd, id) => {
-    const run = start(cmd, id);
-    screens.push({ run, cmd, id, data: [], missedError: 0 });
+screenConfigs.forEach((screenConfig, id) => {
+    const run = start(screenConfig, id);
+    screens.push({ run, config: screenConfig, id, data: [], missedError: 0 });
 });
 
 // process.stdin.setEncoding('utf8');
@@ -106,11 +109,11 @@ process.stdin.on('data', async (key) => {
         const screen = screens[activeScreen];
         if (screen) {
             if (screen.run) {
-                stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.cmd}\n\n`);
+                stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
                 await kill(screen);
             } else {
-                stdout(activeScreen, `\n\nctrl+space > start process: ${screen.cmd}\n\n`);
-                screens[activeScreen].run = start(screen.cmd, screen.id);
+                stdout(activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
+                screens[activeScreen].run = start(screen.config, screen.id);
             }
         }
     } else if (key === '\u0003') {

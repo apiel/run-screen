@@ -7,7 +7,7 @@ const digit = (value) => color(45, ` ${value} `);
 function dashboard(screens) {
     console.clear();
     process.stdout.write(dim(`There is ${screens.length} screens:\n\n`));
-    screens.forEach(({ cmd, missedError }, index) => {
+    screens.forEach(({ config: { cmd }, missedError }, index) => {
         const error = missedError ? red(` [${missedError} new error(s)]`) : '';
         process.stdout.write(`${digit(index + 1)} ${cmd}${error}\n`);
     });

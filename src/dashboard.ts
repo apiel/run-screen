@@ -10,7 +10,7 @@ export function dashboard(screens: Screen[]) {
 
     process.stdout.write(dim(`There is ${screens.length} screens:\n\n`));
 
-    screens.forEach(({ cmd, missedError }, index) => {
+    screens.forEach(({ config: { cmd }, missedError }, index) => {
         const error = missedError ? red(` [${missedError} new error(s)]`) : '';
         process.stdout.write(`${digit(index + 1)} ${cmd}${error}\n`);
     });

@@ -13,8 +13,9 @@ const spawn = require("cross-spawn");
 const shell_quote_1 = require("shell-quote");
 const utils_1 = require("./utils");
 const dashboard_1 = require("./dashboard");
-const cmds = process.argv.slice(2);
-if (!cmds.length) {
+const config_1 = require("./config");
+const args = process.argv.slice(2);
+if (!args.length) {
     console.log(`No command to run.
 
 > run-screen "command 0" "command 1" "command 2" "... bis 9"
@@ -28,6 +29,7 @@ if (!cmds.length) {
     `);
     process.exit();
 }
+const screenConfigs = config_1.loadConfig(args);
 const dataHistorySize = 100;
 let activeScreen = 0;
 const screens = [];
@@ -56,9 +58,9 @@ function handleError(id) {
         dashboard_1.dashboard(screens);
     }
 }
-function start(cmd, id) {
-    const [command, ...args] = shell_quote_1.parse(cmd, process.env);
-    const run = spawn(command, args, spawnOptions);
+function start({ cmd }, id) {
+    const [command, ...params] = shell_quote_1.parse(cmd, process.env);
+    const run = spawn(command, params, spawnOptions);
     run.stdout.on('data', (data) => stdout(id, data));
     run.stderr.on('data', (data) => stderr(id, data));
     run.on('close', (code) => {
@@ -67,9 +69,9 @@ function start(cmd, id) {
     });
     return run;
 }
-cmds.forEach((cmd, id) => {
-    const run = start(cmd, id);
-    screens.push({ run, cmd, id, data: [], missedError: 0 });
+screenConfigs.forEach((screenConfig, id) => {
+    const run = start(screenConfig, id);
+    screens.push({ run, config: screenConfig, id, data: [], missedError: 0 });
 });
 process.stdin.setEncoding('ascii');
 process.stdin.setRawMode(true);
@@ -79,12 +81,12 @@ process.stdin.on('data', (key) => __awaiter(this, void 0, void 0, function* () {
         const screen = screens[activeScreen];
         if (screen) {
             if (screen.run) {
-                stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.cmd}\n\n`);
+                stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
                 yield utils_1.kill(screen);
             }
             else {
-                stdout(activeScreen, `\n\nctrl+space > start process: ${screen.cmd}\n\n`);
-                screens[activeScreen].run = start(screen.cmd, screen.id);
+                stdout(activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
+                screens[activeScreen].run = start(screen.config, screen.id);
             }
         }
     }

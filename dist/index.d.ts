@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /// <reference types="node" />
 import { ChildProcess } from 'child_process';
+import { ScreenConfig } from './config';
 declare type Data = Buffer | Uint8Array | string;
 interface ScreenData {
     writeStream: NodeJS.WriteStream;
@@ -8,7 +9,7 @@ interface ScreenData {
 }
 export interface Screen {
     id: number;
-    cmd: string;
+    config: ScreenConfig;
     run: ChildProcess;
     data: ScreenData[];
     missedError: number;
