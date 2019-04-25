@@ -1,7 +1,13 @@
 - dashboard
     - show when screen updated
 
-- use https://www.npmjs.com/package/cosmiconfig
+- config file
+    - done: use config file
+    - done: cmds
+    - todo: error
+    - todo: docs
+    - todo: file format validation?
+    - todo: config input keys
 
 - interconnect screen
     - screen 1 start , then start screen 2
