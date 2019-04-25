@@ -1,4 +1,4 @@
-import { Screen } from '.';
+import { Screen } from './RunScreen';
 
 const color = (n: number, text: string) => `\x1b[${n}m${text}\x1b[0m`;
 const red = (text: string) => color(31, text);

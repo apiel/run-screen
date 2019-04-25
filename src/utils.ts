@@ -1,11 +1,11 @@
 import * as pidtree from 'pidtree';
 import { promisify } from 'util';
 
-import { Screen } from '.';
+import { Screen } from './RunScreen';
 
 export async function kill(screen: Screen) {
-    if (screen.run) {
-        const pids: number[] = await promisify(pidtree)(screen.run.pid, { root: true });
+    if (screen.proc) {
+        const pids: number[] = await promisify(pidtree)(screen.proc.pid, { root: true });
         pids.forEach((pid) => {
             try {
                 process.kill(pid);

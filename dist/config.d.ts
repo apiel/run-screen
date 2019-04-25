@@ -1,6 +1,7 @@
+import { Screen, RunScreen } from './RunScreen';
 export interface ScreenConfig {
-    before?: (screen: any) => any;
-    after?: (screen: any) => any;
+    before?: (id: number, screenConfig: ScreenConfig, runScreen: RunScreen) => Promise<void> | void;
+    after?: (screen: Screen, runScreen: RunScreen) => Promise<void> | void;
     cmd: string;
 }
 export interface Config {

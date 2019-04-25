@@ -6,9 +6,10 @@ module.exports = {
                 return new Promise(resolve => setTimeout(resolve, 3000));
             },
             cmd: 'yarn foo',
-            after: (screen) => {
-                screen.run.on('close', () => {
+            after: (screen, runScreenInstance) => {
+                screen.proc.on('close', () => {
                     console.log(`\nRestart process after exit. "${screen.config.cmd}"\n`);
+                    runScreenInstance.startScreen(screen);
                 });
             },
         },

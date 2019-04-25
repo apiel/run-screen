@@ -23,6 +23,7 @@
         "foo": "node test/index.js",
         "test1": "yarn build && run-screen 'yarn foo' 'yarn foo error'",
         "test2": "yarn build && run-screen 'watch uptime' htop",
+        "testConfig": "yarn build && run-screen example.config.js",
         "prepublishOnly": "yarn build",
         "start": "ts-node src/index.ts",
         "prebuild": "rm -rf dist/",

@@ -12,8 +12,8 @@ const pidtree = require("pidtree");
 const util_1 = require("util");
 function kill(screen) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (screen.run) {
-            const pids = yield util_1.promisify(pidtree)(screen.run.pid, { root: true });
+        if (screen.proc) {
+            const pids = yield util_1.promisify(pidtree)(screen.proc.pid, { root: true });
             pids.forEach((pid) => {
                 try {
                     process.kill(pid);
