@@ -3,6 +3,8 @@ import { dashboard } from './dashboard';
 import { RunScreenBase } from './RunScreenBase';
 
 export abstract class RunScreenStdin extends RunScreenBase {
+    lastActiveScreen = -1;
+
     stdin() {
         // process.stdin.setEncoding('utf8');
         process.stdin.setEncoding('ascii');
@@ -31,11 +33,21 @@ export abstract class RunScreenStdin extends RunScreenBase {
         process.exit();
     }
 
+    protected toggleDashboard() {
+        if (this.activeScreen !== -1) {
+            this.lastActiveScreen = this.activeScreen;
+            this.activeScreen = -1;
+            dashboard(this.screens);
+        } else if (this.lastActiveScreen !== -1) {
+            this.setActiveScreen(this.lastActiveScreen);
+        }
+    }
+
     async stdinOnData(key: string) {
         const {
             TOGGLE_PROCESS,
             KILL_PROCESS,
-            OPEN_DASHBOARD,
+            TOGGLE_DASHBOARD,
             NEXT_SCREEN,
             PREV_SCREEN,
         } = this.config.keys;
@@ -45,9 +57,8 @@ export abstract class RunScreenStdin extends RunScreenBase {
             this.toggleProcess();
         } else if (key === KILL_PROCESS) {
             this.killProcess();
-        } else if (key === OPEN_DASHBOARD) { // tab
-            this.activeScreen = -1;
-            dashboard(this.screens);
+        } else if (key === TOGGLE_DASHBOARD) { // tab
+            this.toggleDashboard();
         } else if (key === NEXT_SCREEN) {
             this.setActiveScreen(getNextTab(this.screens, this.activeScreen));
         } else if (key === PREV_SCREEN) {

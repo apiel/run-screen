@@ -7,7 +7,7 @@ export interface ScreenConfig {
 export interface Keys {
     TOGGLE_PROCESS: string;
     KILL_PROCESS: string;
-    OPEN_DASHBOARD: string;
+    TOGGLE_DASHBOARD: string;
     NEXT_SCREEN: string;
     PREV_SCREEN: string;
 }

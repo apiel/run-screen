@@ -12,6 +12,10 @@ const utils_1 = require("./utils");
 const dashboard_1 = require("./dashboard");
 const RunScreenBase_1 = require("./RunScreenBase");
 class RunScreenStdin extends RunScreenBase_1.RunScreenBase {
+    constructor() {
+        super(...arguments);
+        this.lastActiveScreen = -1;
+    }
     stdin() {
         process.stdin.setEncoding('ascii');
         process.stdin.setRawMode(true);
@@ -40,18 +44,27 @@ class RunScreenStdin extends RunScreenBase_1.RunScreenBase {
             process.exit();
         });
     }
+    toggleDashboard() {
+        if (this.activeScreen !== -1) {
+            this.lastActiveScreen = this.activeScreen;
+            this.activeScreen = -1;
+            dashboard_1.dashboard(this.screens);
+        }
+        else if (this.lastActiveScreen !== -1) {
+            this.setActiveScreen(this.lastActiveScreen);
+        }
+    }
     stdinOnData(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { TOGGLE_PROCESS, KILL_PROCESS, OPEN_DASHBOARD, NEXT_SCREEN, PREV_SCREEN, } = this.config.keys;
+            const { TOGGLE_PROCESS, KILL_PROCESS, TOGGLE_DASHBOARD, NEXT_SCREEN, PREV_SCREEN, } = this.config.keys;
             if (key === TOGGLE_PROCESS) {
                 this.toggleProcess();
             }
             else if (key === KILL_PROCESS) {
                 this.killProcess();
             }
-            else if (key === OPEN_DASHBOARD) {
-                this.activeScreen = -1;
-                dashboard_1.dashboard(this.screens);
+            else if (key === TOGGLE_DASHBOARD) {
+                this.toggleDashboard();
             }
             else if (key === NEXT_SCREEN) {
                 this.setActiveScreen(utils_1.getNextTab(this.screens, this.activeScreen));

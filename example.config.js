@@ -1,4 +1,7 @@
 module.exports = {
+    keys: {
+        TOGGLE_DASHBOARD: '#',
+    },
     screens: [
         {
             before: (id, screenConfig) => {

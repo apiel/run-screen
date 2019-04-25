@@ -20,7 +20,7 @@ export interface ScreenConfig {
 export interface Keys {
     TOGGLE_PROCESS: string;
     KILL_PROCESS: string;
-    OPEN_DASHBOARD: string;
+    TOGGLE_DASHBOARD: string;
     NEXT_SCREEN: string;
     PREV_SCREEN: string;
 }
@@ -33,7 +33,7 @@ export interface Config {
 const defaultKeys: Keys = {
     TOGGLE_PROCESS: '\u0000', // ctrl+space
     KILL_PROCESS: '\u0003', // ctrl+c
-    OPEN_DASHBOARD: '\u0009', // tab
+    TOGGLE_DASHBOARD: '\u0009', // tab
     NEXT_SCREEN: '>',
     PREV_SCREEN: '<',
 };

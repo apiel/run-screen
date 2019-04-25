@@ -11,7 +11,7 @@ ${message}`);
 const defaultKeys = {
     TOGGLE_PROCESS: '\u0000',
     KILL_PROCESS: '\u0003',
-    OPEN_DASHBOARD: '\u0009',
+    TOGGLE_DASHBOARD: '\u0009',
     NEXT_SCREEN: '>',
     PREV_SCREEN: '<',
 };
