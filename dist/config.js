@@ -3,7 +3,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 function invalidConfigFormat(message) {
     console.log(`Invalid config format
-...
+
+{
+    keys: {
+        TOGGLE_PROCESS: 'key', // e.g '\u0000' for ctrl+space
+        KILL_PROCESS: 'key', // e.g 'k'
+        TOGGLE_DASHBOARD: 'key', // e.g '#'
+        NEXT_SCREEN: 'key', // e.g '<'
+        PREV_SCREEN: 'key', // ...
+    },
+    screens: [
+        {
+            before: Function, // function to run before executing the command
+            cmd: 'yarn foo', // required
+            after: Function, // function to run after the command was started inside a screen
+        },
+    ],
+}
+
+Before function is of type:
+before: (id: number, screenConfig: ScreenConfig, runScreen: RunScreen) => Promise<void> | void;
+
+After function is of type:
+after: (screen: Screen, runScreen: RunScreen) => Promise<void> | void;
 
 ${message}`);
     process.exit();

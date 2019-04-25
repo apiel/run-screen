@@ -12,7 +12,6 @@ export declare class RunScreen extends RunScreenStd {
     screens: Screen[];
     constructor(config: Config);
     run(): void;
-    handleError(id: number): void;
     startProcess({ cmd }: ScreenConfig, id: number): ChildProcess;
     startScreen(screen: Screen): Promise<Screen>;
     setActiveScreen(id: number): void;

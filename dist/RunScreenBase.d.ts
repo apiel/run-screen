@@ -12,6 +12,7 @@ export interface Screen {
     proc: ChildProcess;
     data: ScreenData[];
     missedError: number;
+    missedOutput: number;
 }
 export declare abstract class RunScreenBase {
     abstract config: Config;
@@ -21,7 +22,6 @@ export declare abstract class RunScreenBase {
     abstract stdWrite(writeStream: NodeJS.WriteStream, id: number, data: Data): void;
     abstract stdout(id: number, data: Data): void;
     abstract stderr(id: number, data: Data): void;
-    abstract handleError(id: number): void;
     abstract startProcess({ cmd }: ScreenConfig, id: number): ChildProcess;
     abstract startScreen(screen: Screen): Promise<Screen>;
     abstract setActiveScreen(id: number): void;

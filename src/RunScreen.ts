@@ -2,7 +2,6 @@ import * as spawn from 'cross-spawn';
 import { parse } from 'shell-quote';
 import { ChildProcess, SpawnOptions } from 'child_process';
 
-import { dashboard } from './dashboard';
 import { Config, ScreenConfig } from './config';
 import { Screen } from './RunScreenBase';
 import { RunScreenStd } from './RunScreenStd';
@@ -23,20 +22,17 @@ export class RunScreen extends RunScreenStd {
 
     run() {
         this.config.screens.forEach((screenConfig, id) => {
-            const screen = { proc: null, config: screenConfig, id, data: [], missedError: 0 };
+            const screen = {
+                proc: null,
+                config: screenConfig,
+                id, data: [],
+                missedError: 0,
+                missedOutput: 0,
+            };
             this.screens.push(screen);
             this.startScreen(screen);
         });
         this.stdin();
-    }
-
-    handleError(id: number) {
-        if (id !== this.activeScreen) {
-            this.screens[id].missedError++;
-        }
-        if (this.activeScreen === -1) {
-            dashboard(this.screens);
-        }
     }
 
     startProcess({ cmd }: ScreenConfig, id: number): ChildProcess {
@@ -76,5 +72,6 @@ export class RunScreen extends RunScreenStd {
             ({ writeStream, data }) => writeStream.write(data),
         );
         this.screens[this.activeScreen].missedError = 0;
+        this.screens[this.activeScreen].missedOutput = 0;
     }
 }

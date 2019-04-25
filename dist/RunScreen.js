@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const spawn = require("cross-spawn");
 const shell_quote_1 = require("shell-quote");
-const dashboard_1 = require("./dashboard");
 const RunScreenStd_1 = require("./RunScreenStd");
 class RunScreen extends RunScreenStd_1.RunScreenStd {
     constructor(config) {
@@ -23,19 +22,17 @@ class RunScreen extends RunScreenStd_1.RunScreenStd {
     }
     run() {
         this.config.screens.forEach((screenConfig, id) => {
-            const screen = { proc: null, config: screenConfig, id, data: [], missedError: 0 };
+            const screen = {
+                proc: null,
+                config: screenConfig,
+                id, data: [],
+                missedError: 0,
+                missedOutput: 0,
+            };
             this.screens.push(screen);
             this.startScreen(screen);
         });
         this.stdin();
-    }
-    handleError(id) {
-        if (id !== this.activeScreen) {
-            this.screens[id].missedError++;
-        }
-        if (this.activeScreen === -1) {
-            dashboard_1.dashboard(this.screens);
-        }
     }
     startProcess({ cmd }, id) {
         const [command, ...params] = shell_quote_1.parse(cmd, process.env);
@@ -67,6 +64,7 @@ class RunScreen extends RunScreenStd_1.RunScreenStd {
         console.clear();
         this.screens[this.activeScreen].data.forEach(({ writeStream, data }) => writeStream.write(data));
         this.screens[this.activeScreen].missedError = 0;
+        this.screens[this.activeScreen].missedOutput = 0;
     }
 }
 exports.RunScreen = RunScreen;
