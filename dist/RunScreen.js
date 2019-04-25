@@ -11,8 +11,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const spawn = require("cross-spawn");
 const shell_quote_1 = require("shell-quote");
 const dashboard_1 = require("./dashboard");
-const RunScreenStdin_1 = require("./RunScreenStdin");
-class RunScreen extends RunScreenStdin_1.RunScreenStdin {
+const RunScreenStd_1 = require("./RunScreenStd");
+class RunScreen extends RunScreenStd_1.RunScreenStd {
     constructor() {
         super(...arguments);
         this.spawnOptions = {};
@@ -27,22 +27,6 @@ class RunScreen extends RunScreenStdin_1.RunScreenStdin {
             this.startScreen(screen);
         });
         this.stdin();
-    }
-    stdWrite(writeStream, id, data) {
-        if (id === this.activeScreen) {
-            writeStream.write(data);
-        }
-        this.screens[id].data = [
-            ...this.screens[id].data,
-            { writeStream, data },
-        ].slice(-this.dataHistorySize);
-    }
-    stdout(id, data) {
-        this.stdWrite(process.stdout, id, data);
-    }
-    stderr(id, data) {
-        this.stdWrite(process.stderr, id, data);
-        this.handleError(id);
     }
     handleError(id) {
         if (id !== this.activeScreen) {
