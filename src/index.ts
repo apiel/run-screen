@@ -76,7 +76,7 @@ function handleError(id: number) {
     }
 }
 
-function start({ cmd }: ScreenConfig, id: number): ChildProcess {
+function start({ cmd}: ScreenConfig, id: number): ChildProcess {
     const [command, ...params] = parse(cmd, process.env);
 
     const run = spawn(command as string, params as string[], spawnOptions);
@@ -92,9 +92,24 @@ function start({ cmd }: ScreenConfig, id: number): ChildProcess {
     return run;
 }
 
+async function startScreen(screen: Screen) {
+    const { id, config } = screen;
+    const { before, after } = config;
+
+    if (before) {
+        await before(id, config);
+    }
+    screen.run = start(config, id);
+    if (after) {
+        await after(screen);
+    }
+    return screen;
+}
+
 screenConfigs.forEach((screenConfig, id) => {
-    const run = start(screenConfig, id);
-    screens.push({ run, config: screenConfig, id, data: [], missedError: 0 });
+    const screen = { run: null, config: screenConfig, id, data: [], missedError: 0 };
+    screens.push(screen);
+    startScreen(screen);
 });
 
 // process.stdin.setEncoding('utf8');
@@ -113,7 +128,7 @@ process.stdin.on('data', async (key) => {
                 await kill(screen);
             } else {
                 stdout(activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
-                screens[activeScreen].run = start(screen.config, screen.id);
+                screens[activeScreen] = await startScreen(screen);
             }
         }
     } else if (key === '\u0003') {

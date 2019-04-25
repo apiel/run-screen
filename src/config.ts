@@ -1,4 +1,5 @@
 import { extname } from 'path';
+import { Screen } from '.';
 
 function invalidConfigFormat(message: string) {
     console.log(
@@ -11,8 +12,8 @@ ${message}`,
 }
 
 export interface ScreenConfig {
-    before?: (screen: any) => any;
-    after?: (screen: any) => any;
+    before?: (id: number, screenConfig: ScreenConfig) => Promise<void> | void;
+    after?: (screen: Screen) => Promise<void> | void;
     cmd: string;
 }
 
