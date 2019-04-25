@@ -1,19 +1,10 @@
 /// <reference types="node" />
 import { ChildProcess, SpawnOptions } from 'child_process';
 import { ScreenConfig } from './config';
-declare type Data = Buffer | Uint8Array | string;
-interface ScreenData {
-    writeStream: NodeJS.WriteStream;
-    data: Data;
-}
-export interface Screen {
-    id: number;
-    config: ScreenConfig;
-    proc: ChildProcess;
-    data: ScreenData[];
-    missedError: number;
-}
-export declare class RunScreen {
+import { RunScreenStdin } from './RunScreenStdin';
+import { Screen, Data } from './RunScreenBase';
+export { Screen, Data } from './RunScreenBase';
+export declare class RunScreen extends RunScreenStdin {
     spawnOptions: SpawnOptions;
     dataHistorySize: number;
     activeScreen: number;
@@ -26,7 +17,4 @@ export declare class RunScreen {
     startProcess({ cmd }: ScreenConfig, id: number): ChildProcess;
     startScreen(screen: Screen): Promise<Screen>;
     setActiveScreen(id: number): void;
-    stdin(): void;
-    stdinOnData(key: string): Promise<void>;
 }
-export {};
