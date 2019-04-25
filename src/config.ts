@@ -4,7 +4,29 @@ import { Screen, RunScreen } from './RunScreen';
 function invalidConfigFormat(message: string) {
     console.log(
         `Invalid config format
-...
+
+{
+    keys: {
+        TOGGLE_PROCESS: 'key', // e.g '\u0000' for ctrl+space
+        KILL_PROCESS: 'key', // e.g 'k'
+        TOGGLE_DASHBOARD: 'key', // e.g '#'
+        NEXT_SCREEN: 'key', // e.g '<'
+        PREV_SCREEN: 'key', // ...
+    },
+    screens: [
+        {
+            before: Function, // function to run before executing the command
+            cmd: 'yarn foo', // required
+            after: Function, // function to run after the command was started inside a screen
+        },
+    ],
+}
+
+Before function is of type:
+before: (id: number, screenConfig: ScreenConfig, runScreen: RunScreen) => Promise<void> | void;
+
+After function is of type:
+after: (screen: Screen, runScreen: RunScreen) => Promise<void> | void;
 
 ${message}`,
     );
@@ -37,11 +59,6 @@ const defaultKeys: Keys = {
     NEXT_SCREEN: '>',
     PREV_SCREEN: '<',
 };
-
-// const defaultConfig: Config = {
-//     ,
-//     screens: [],
-// };
 
 export function loadConfig(args: string[]): Config {
     if (extname(args[0]) === '.js') { // we could check that's not executable file and `#!/usr/bin/env node` is not on top
