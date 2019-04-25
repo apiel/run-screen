@@ -1,10 +1,9 @@
 /// <reference types="node" />
 import { ChildProcess, SpawnOptions } from 'child_process';
 import { Config, ScreenConfig } from './config';
-import { Screen } from './RunScreenBase';
-import { RunScreenStd } from './RunScreenStd';
-export { Screen, Data } from './RunScreenBase';
-export declare class RunScreen extends RunScreenStd {
+import { Screen } from './types';
+export { Screen, Data } from './types';
+export declare class RunScreen {
     readonly config: Config;
     spawnOptions: SpawnOptions;
     dataHistorySize: number;

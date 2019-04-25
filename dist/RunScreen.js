@@ -10,10 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const spawn = require("cross-spawn");
 const shell_quote_1 = require("shell-quote");
-const RunScreenStd_1 = require("./RunScreenStd");
-class RunScreen extends RunScreenStd_1.RunScreenStd {
+const std_1 = require("./std");
+class RunScreen {
     constructor(config) {
-        super();
         this.config = config;
         this.spawnOptions = {};
         this.dataHistorySize = 100;
@@ -36,10 +35,10 @@ class RunScreen extends RunScreenStd_1.RunScreenStd {
     startProcess({ cmd }, id) {
         const [command, ...params] = shell_quote_1.parse(cmd, process.env);
         const proc = spawn(command, params, this.spawnOptions);
-        proc.stdout.on('data', (data) => this.stdout(id, data));
-        proc.stderr.on('data', (data) => this.stderr(id, data));
+        proc.stdout.on('data', (data) => std_1.stdout(this, id, data));
+        proc.stderr.on('data', (data) => std_1.stderr(this, id, data));
         proc.on('close', (code) => {
-            this.stdout(id, `child process exited with code ${code}`);
+            std_1.stdout(this, id, `child process exited with code ${code}`);
             this.screens[id].proc = null;
         });
         return proc;
