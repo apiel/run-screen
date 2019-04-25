@@ -2,6 +2,7 @@
 
 import { loadConfig } from './config';
 import { RunScreen } from './RunScreen';
+import { Stdin } from './Stdin';
 
 const args = process.argv.slice(2);
 if (!args.length) {
@@ -23,3 +24,5 @@ if (!args.length) {
 const config = loadConfig(args);
 const runScreen = new RunScreen(config);
 runScreen.run();
+const stdin = new Stdin(runScreen);
+stdin.stdin();

@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const RunScreen_1 = require("./RunScreen");
+const Stdin_1 = require("./Stdin");
 const args = process.argv.slice(2);
 if (!args.length) {
     console.log(`No command to run.
@@ -21,4 +22,6 @@ if (!args.length) {
 const config = config_1.loadConfig(args);
 const runScreen = new RunScreen_1.RunScreen(config);
 runScreen.run();
+const stdin = new Stdin_1.Stdin(runScreen);
+stdin.stdin();
 //# sourceMappingURL=index.js.map

@@ -32,7 +32,6 @@ class RunScreen extends RunScreenStd_1.RunScreenStd {
             this.screens.push(screen);
             this.startScreen(screen);
         });
-        this.stdin();
     }
     startProcess({ cmd }, id) {
         const [command, ...params] = shell_quote_1.parse(cmd, process.env);

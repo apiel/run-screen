@@ -2,7 +2,7 @@ import { extname } from 'path';
 import { Screen, RunScreen } from './RunScreen';
 
 function invalidConfigFormat(message: string) {
-    console.log(
+    console.log( // tslint:disable-line
         `Invalid config format
 
 {

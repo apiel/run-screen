@@ -1,9 +1,11 @@
 import { kill, getScreenId, getNextTab, getPrevTab } from './utils';
 import { dashboard } from './dashboard';
-import { RunScreenBase } from './RunScreenBase';
+import { RunScreen } from './RunScreen';
 
-export abstract class RunScreenStdin extends RunScreenBase {
+export class Stdin {
     lastActiveScreen = -1;
+
+    constructor(private runScreen: RunScreen) {}
 
     stdin() {
         // process.stdin.setEncoding('utf8');
@@ -14,43 +16,48 @@ export abstract class RunScreenStdin extends RunScreenBase {
     }
 
     protected async toggleProcess() {
-        const screen = this.screens[this.activeScreen];
+        const { screens, activeScreen } = this.runScreen;
+        const screen = screens[activeScreen];
         if (screen) {
             if (screen.proc) {
-                this.stdout(this.activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
+                this.runScreen.std.stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
                 await kill(screen);
             } else {
-                this.stdout(this.activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
-                this.screens[this.activeScreen] = await this.startScreen(screen);
+                this.runScreen.std.stdout(activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
+                this.runScreen.screens[activeScreen] = await this.runScreen.startScreen(screen);
             }
         }
     }
 
     protected async killProcess() {
-        await Promise.all(this.screens.map(kill));
+        await Promise.all(this.runScreen.screens.map(kill));
         // console.clear(); // ??? for htop but in most of the case clearing is not nice
         process.stdin.resume();
         process.exit();
     }
 
     protected toggleDashboard() {
-        if (this.activeScreen !== -1) {
-            this.lastActiveScreen = this.activeScreen;
-            this.activeScreen = -1;
-            dashboard(this.screens);
+        const { screens, activeScreen } = this.runScreen;
+
+        if (activeScreen !== -1) {
+            this.lastActiveScreen = activeScreen;
+            this.runScreen.activeScreen = -1;
+            dashboard(screens);
         } else if (this.lastActiveScreen !== -1) {
-            this.setActiveScreen(this.lastActiveScreen);
+            this.runScreen.setActiveScreen(this.lastActiveScreen);
         }
     }
 
     async stdinOnData(key: string) {
+        const { config: { keys }, activeScreen, screens } = this.runScreen;
+
         const {
             TOGGLE_PROCESS,
             KILL_PROCESS,
             TOGGLE_DASHBOARD,
             NEXT_SCREEN,
             PREV_SCREEN,
-        } = this.config.keys;
+        } = keys;
 
         // console.log('key', key, !!screens[key], key.charCodeAt(0), `\\u00${key.charCodeAt(0).toString(16)}`);
         if (key === TOGGLE_PROCESS) {
@@ -60,14 +67,14 @@ export abstract class RunScreenStdin extends RunScreenBase {
         } else if (key === TOGGLE_DASHBOARD) { // tab
             this.toggleDashboard();
         } else if (key === NEXT_SCREEN) {
-            this.setActiveScreen(getNextTab(this.screens, this.activeScreen));
+            this.runScreen.setActiveScreen(getNextTab(screens, activeScreen));
         } else if (key === PREV_SCREEN) {
-            this.setActiveScreen(getPrevTab(this.screens, this.activeScreen));
-        } else if (!!this.screens[getScreenId(key)]) {
-            this.setActiveScreen(getScreenId(key));
+            this.runScreen.setActiveScreen(getPrevTab(screens, activeScreen));
+        } else if (!!screens[getScreenId(key)]) {
+            this.runScreen.setActiveScreen(getScreenId(key));
         }
-        if (this.screens[this.activeScreen] && this.screens[this.activeScreen].proc) {
-            this.screens[this.activeScreen].proc.stdin.write(key);
+        if (screens[activeScreen] && screens[activeScreen].proc) {
+            screens[activeScreen].proc.stdin.write(key);
         }
     }
 }

@@ -3,21 +3,22 @@ import { parse } from 'shell-quote';
 import { ChildProcess, SpawnOptions } from 'child_process';
 
 import { Config, ScreenConfig } from './config';
-import { Screen } from './RunScreenBase';
-import { RunScreenStd } from './RunScreenStd';
+import { Screen } from './types';
+import { Std } from './Std';
 
-export { Screen, Data } from './RunScreenBase';
+export { Screen, Data } from './types';
 
-export class RunScreen extends RunScreenStd {
+export class RunScreen {
     spawnOptions: SpawnOptions = {
         // cwd: process.cwd(),
     };
     dataHistorySize = 100;
     activeScreen = 0;
     screens: Screen[] = [];
+    std: Std;
 
     constructor(readonly config: Config) {
-        super();
+        this.std = new Std(this);
     }
 
     run() {
@@ -32,7 +33,6 @@ export class RunScreen extends RunScreenStd {
             this.screens.push(screen);
             this.startScreen(screen);
         });
-        this.stdin();
     }
 
     startProcess({ cmd }: ScreenConfig, id: number): ChildProcess {
@@ -40,11 +40,11 @@ export class RunScreen extends RunScreenStd {
 
         const proc = spawn(command as string, params as string[], this.spawnOptions);
 
-        proc.stdout.on('data', (data) => this.stdout(id, data));
-        proc.stderr.on('data', (data) => this.stderr(id, data));
+        proc.stdout.on('data', (data) => this.std.stdout(id, data));
+        proc.stderr.on('data', (data) => this.std.stderr(id, data));
 
         proc.on('close', (code) => {
-            this.stdout(id, `child process exited with code ${code}`);
+            this.std.stdout(id, `child process exited with code ${code}`);
             this.screens[id].proc = null;
         });
 
