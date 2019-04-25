@@ -4,7 +4,15 @@ export interface ScreenConfig {
     after?: (screen: Screen, runScreen: RunScreen) => Promise<void> | void;
     cmd: string;
 }
+export interface Keys {
+    TOGGLE_PROCESS: string;
+    KILL_PROCESS: string;
+    OPEN_DASHBOARD: string;
+    NEXT_SCREEN: string;
+    PREV_SCREEN: string;
+}
 export interface Config {
+    keys: Keys;
     screens: ScreenConfig[];
 }
-export declare function loadConfig(args: string[]): ScreenConfig[];
+export declare function loadConfig(args: string[]): Config;

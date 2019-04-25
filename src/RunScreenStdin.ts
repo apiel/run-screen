@@ -11,31 +11,46 @@ export abstract class RunScreenStdin extends RunScreenBase {
         process.stdin.on('data', (key) => this.stdinOnData(key));
     }
 
-    async stdinOnData(key: string) {
-        // '\u0012' ctrlR
-        // console.log('key', key, !!screens[key], key.charCodeAt(0), `\\u00${key.charCodeAt(0).toString(16)}`);
-        if (key === '\u0000') { // ctrlSpace
-            const screen = this.screens[this.activeScreen];
-            if (screen) {
-                if (screen.proc) {
-                    this.stdout(this.activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
-                    await kill(screen);
-                } else {
-                    this.stdout(this.activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
-                    this.screens[this.activeScreen] = await this.startScreen(screen);
-                }
+    protected async toggleProcess() {
+        const screen = this.screens[this.activeScreen];
+        if (screen) {
+            if (screen.proc) {
+                this.stdout(this.activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
+                await kill(screen);
+            } else {
+                this.stdout(this.activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
+                this.screens[this.activeScreen] = await this.startScreen(screen);
             }
-        } else if (key === '\u0003') {
-            await Promise.all(this.screens.map(kill));
-            // console.clear(); // ??? for htop but in most of the case clearing is not nice
-            process.stdin.resume();
-            process.exit();
-        } else if (key === '\u0009') { // tab
+        }
+    }
+
+    protected async killProcess() {
+        await Promise.all(this.screens.map(kill));
+        // console.clear(); // ??? for htop but in most of the case clearing is not nice
+        process.stdin.resume();
+        process.exit();
+    }
+
+    async stdinOnData(key: string) {
+        const {
+            TOGGLE_PROCESS,
+            KILL_PROCESS,
+            OPEN_DASHBOARD,
+            NEXT_SCREEN,
+            PREV_SCREEN,
+        } = this.config.keys;
+
+        // console.log('key', key, !!screens[key], key.charCodeAt(0), `\\u00${key.charCodeAt(0).toString(16)}`);
+        if (key === TOGGLE_PROCESS) {
+            this.toggleProcess();
+        } else if (key === KILL_PROCESS) {
+            this.killProcess();
+        } else if (key === OPEN_DASHBOARD) { // tab
             this.activeScreen = -1;
             dashboard(this.screens);
-        } else if (key === '>') {
+        } else if (key === NEXT_SCREEN) {
             this.setActiveScreen(getNextTab(this.screens, this.activeScreen));
-        } else if (key === '<') {
+        } else if (key === PREV_SCREEN) {
             this.setActiveScreen(getPrevTab(this.screens, this.activeScreen));
         } else if (!!this.screens[getScreenId(key)]) {
             this.setActiveScreen(getScreenId(key));

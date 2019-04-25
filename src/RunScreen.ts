@@ -3,7 +3,7 @@ import { parse } from 'shell-quote';
 import { ChildProcess, SpawnOptions } from 'child_process';
 
 import { dashboard } from './dashboard';
-import { ScreenConfig } from './config';
+import { Config, ScreenConfig } from './config';
 import { Screen } from './RunScreenBase';
 import { RunScreenStd } from './RunScreenStd';
 
@@ -17,8 +17,12 @@ export class RunScreen extends RunScreenStd {
     activeScreen = 0;
     screens: Screen[] = [];
 
-    run(screenConfigs: ScreenConfig[]) {
-        screenConfigs.forEach((screenConfig, id) => {
+    constructor(readonly config: Config) {
+        super();
+    }
+
+    run() {
+        this.config.screens.forEach((screenConfig, id) => {
             const screen = { proc: null, config: screenConfig, id, data: [], missedError: 0 };
             this.screens.push(screen);
             this.startScreen(screen);

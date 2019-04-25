@@ -1,4 +1,4 @@
-import { ScreenConfig } from './config';
+import { ScreenConfig, Config } from './config';
 import { ChildProcess } from 'child_process';
 
 export type Data = Buffer | Uint8Array | string;
@@ -16,6 +16,7 @@ export interface Screen {
 }
 
 export abstract class RunScreenBase {
+    abstract config: Config;
     abstract dataHistorySize: number;
     abstract activeScreen: number;
     abstract screens: Screen[];

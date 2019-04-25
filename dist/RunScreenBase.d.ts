@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { ScreenConfig } from './config';
+import { ScreenConfig, Config } from './config';
 import { ChildProcess } from 'child_process';
 export declare type Data = Buffer | Uint8Array | string;
 export interface ScreenData {
@@ -14,6 +14,7 @@ export interface Screen {
     missedError: number;
 }
 export declare abstract class RunScreenBase {
+    abstract config: Config;
     abstract dataHistorySize: number;
     abstract activeScreen: number;
     abstract screens: Screen[];

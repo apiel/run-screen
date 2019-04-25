@@ -20,6 +20,6 @@ if (!args.length) {
     process.exit();
 }
 
-const screenConfigs = loadConfig(args);
-const runScreen = new RunScreen();
-runScreen.run(screenConfigs);
+const config = loadConfig(args);
+const runScreen = new RunScreen(config);
+runScreen.run();

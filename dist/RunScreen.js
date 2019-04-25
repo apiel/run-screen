@@ -13,15 +13,16 @@ const shell_quote_1 = require("shell-quote");
 const dashboard_1 = require("./dashboard");
 const RunScreenStd_1 = require("./RunScreenStd");
 class RunScreen extends RunScreenStd_1.RunScreenStd {
-    constructor() {
-        super(...arguments);
+    constructor(config) {
+        super();
+        this.config = config;
         this.spawnOptions = {};
         this.dataHistorySize = 100;
         this.activeScreen = 0;
         this.screens = [];
     }
-    run(screenConfigs) {
-        screenConfigs.forEach((screenConfig, id) => {
+    run() {
+        this.config.screens.forEach((screenConfig, id) => {
             const screen = { proc: null, config: screenConfig, id, data: [], missedError: 0 };
             this.screens.push(screen);
             this.startScreen(screen);

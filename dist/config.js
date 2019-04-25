@@ -8,20 +8,38 @@ function invalidConfigFormat(message) {
 ${message}`);
     process.exit();
 }
+const defaultKeys = {
+    TOGGLE_PROCESS: '\u0000',
+    KILL_PROCESS: '\u0003',
+    OPEN_DASHBOARD: '\u0009',
+    NEXT_SCREEN: '>',
+    PREV_SCREEN: '<',
+};
 function loadConfig(args) {
     if (path_1.extname(args[0]) === '.js') {
-        const configPath = require.resolve(args[0], { paths: [process.cwd()] });
-        const config = require(configPath);
-        if (!config.screens) {
-            invalidConfigFormat('Screens settings are missings');
-        }
-        const screens = config.screens.filter(screen => screen.cmd);
-        if (!screens.length) {
-            invalidConfigFormat('Commands are missings in screens');
-        }
-        return screens;
+        return loadConfigFromFile(args[0]);
     }
-    return args.map(cmd => ({ cmd }));
+    const screens = args.map(cmd => ({ cmd }));
+    return {
+        keys: defaultKeys,
+        screens,
+    };
 }
 exports.loadConfig = loadConfig;
+function loadConfigFromFile(file) {
+    const configPath = require.resolve(file, { paths: [process.cwd()] });
+    const config = require(configPath);
+    if (!config.screens) {
+        invalidConfigFormat('Screens settings are missings');
+    }
+    const screens = config.screens.filter(screen => screen.cmd);
+    if (!screens.length) {
+        invalidConfigFormat('Commands are missings in screens');
+    }
+    const keys = config.keys ? Object.assign({}, defaultKeys, config.keys) : defaultKeys;
+    return {
+        keys,
+        screens,
+    };
+}
 //# sourceMappingURL=config.js.map

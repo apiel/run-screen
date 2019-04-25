@@ -18,7 +18,7 @@ if (!args.length) {
     `);
     process.exit();
 }
-const screenConfigs = config_1.loadConfig(args);
-const runScreen = new RunScreen_1.RunScreen();
-runScreen.run(screenConfigs);
+const config = config_1.loadConfig(args);
+const runScreen = new RunScreen_1.RunScreen(config);
+runScreen.run();
 //# sourceMappingURL=index.js.map

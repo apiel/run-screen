@@ -1,15 +1,17 @@
 /// <reference types="node" />
 import { ChildProcess, SpawnOptions } from 'child_process';
-import { ScreenConfig } from './config';
+import { Config, ScreenConfig } from './config';
 import { Screen } from './RunScreenBase';
 import { RunScreenStd } from './RunScreenStd';
 export { Screen, Data } from './RunScreenBase';
 export declare class RunScreen extends RunScreenStd {
+    readonly config: Config;
     spawnOptions: SpawnOptions;
     dataHistorySize: number;
     activeScreen: number;
     screens: Screen[];
-    run(screenConfigs: ScreenConfig[]): void;
+    constructor(config: Config);
+    run(): void;
     handleError(id: number): void;
     startProcess({ cmd }: ScreenConfig, id: number): ChildProcess;
     startScreen(screen: Screen): Promise<Screen>;

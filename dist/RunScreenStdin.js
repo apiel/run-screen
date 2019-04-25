@@ -18,34 +18,45 @@ class RunScreenStdin extends RunScreenBase_1.RunScreenBase {
         process.stdin.resume();
         process.stdin.on('data', (key) => this.stdinOnData(key));
     }
-    stdinOnData(key) {
+    toggleProcess() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (key === '\u0000') {
-                const screen = this.screens[this.activeScreen];
-                if (screen) {
-                    if (screen.proc) {
-                        this.stdout(this.activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
-                        yield utils_1.kill(screen);
-                    }
-                    else {
-                        this.stdout(this.activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
-                        this.screens[this.activeScreen] = yield this.startScreen(screen);
-                    }
+            const screen = this.screens[this.activeScreen];
+            if (screen) {
+                if (screen.proc) {
+                    this.stdout(this.activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
+                    yield utils_1.kill(screen);
+                }
+                else {
+                    this.stdout(this.activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
+                    this.screens[this.activeScreen] = yield this.startScreen(screen);
                 }
             }
-            else if (key === '\u0003') {
-                yield Promise.all(this.screens.map(utils_1.kill));
-                process.stdin.resume();
-                process.exit();
+        });
+    }
+    killProcess() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield Promise.all(this.screens.map(utils_1.kill));
+            process.stdin.resume();
+            process.exit();
+        });
+    }
+    stdinOnData(key) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { TOGGLE_PROCESS, KILL_PROCESS, OPEN_DASHBOARD, NEXT_SCREEN, PREV_SCREEN, } = this.config.keys;
+            if (key === TOGGLE_PROCESS) {
+                this.toggleProcess();
             }
-            else if (key === '\u0009') {
+            else if (key === KILL_PROCESS) {
+                this.killProcess();
+            }
+            else if (key === OPEN_DASHBOARD) {
                 this.activeScreen = -1;
                 dashboard_1.dashboard(this.screens);
             }
-            else if (key === '>') {
+            else if (key === NEXT_SCREEN) {
                 this.setActiveScreen(utils_1.getNextTab(this.screens, this.activeScreen));
             }
-            else if (key === '<') {
+            else if (key === PREV_SCREEN) {
                 this.setActiveScreen(utils_1.getPrevTab(this.screens, this.activeScreen));
             }
             else if (!!this.screens[utils_1.getScreenId(key)]) {
