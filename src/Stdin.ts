@@ -1,6 +1,7 @@
 import { kill, getScreenId, getNextTab, getPrevTab } from './utils';
 import { dashboard } from './dashboard';
 import { RunScreen } from './RunScreen';
+import { stdout } from './std';
 
 export class Stdin {
     lastActiveScreen = -1;
@@ -20,10 +21,10 @@ export class Stdin {
         const screen = screens[activeScreen];
         if (screen) {
             if (screen.proc) {
-                this.runScreen.std.stdout(activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
+                stdout(this.runScreen, activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
                 await kill(screen);
             } else {
-                this.runScreen.std.stdout(activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
+                stdout(this.runScreen, activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
                 this.runScreen.screens[activeScreen] = await this.runScreen.startScreen(screen);
             }
         }

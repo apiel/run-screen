@@ -4,7 +4,7 @@ import { ChildProcess, SpawnOptions } from 'child_process';
 
 import { Config, ScreenConfig } from './config';
 import { Screen } from './types';
-import { Std } from './Std';
+import { stdout, stderr } from './std';
 
 export { Screen, Data } from './types';
 
@@ -15,11 +15,8 @@ export class RunScreen {
     dataHistorySize = 100;
     activeScreen = 0;
     screens: Screen[] = [];
-    std: Std;
 
-    constructor(readonly config: Config) {
-        this.std = new Std(this);
-    }
+    constructor(readonly config: Config) { }
 
     run() {
         this.config.screens.forEach((screenConfig, id) => {
@@ -40,11 +37,11 @@ export class RunScreen {
 
         const proc = spawn(command as string, params as string[], this.spawnOptions);
 
-        proc.stdout.on('data', (data) => this.std.stdout(id, data));
-        proc.stderr.on('data', (data) => this.std.stderr(id, data));
+        proc.stdout.on('data', (data) => stdout(this, id, data));
+        proc.stderr.on('data', (data) => stderr(this, id, data));
 
         proc.on('close', (code) => {
-            this.std.stdout(id, `child process exited with code ${code}`);
+            stdout(this, id, `child process exited with code ${code}`);
             this.screens[id].proc = null;
         });
 
