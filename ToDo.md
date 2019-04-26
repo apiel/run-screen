@@ -3,5 +3,4 @@
 
 - unit test
 - integration test?
-- show stopped process on dashboard
 - split screen? maybe too complicated
