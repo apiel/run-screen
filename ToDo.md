@@ -4,3 +4,7 @@
 - unit test
 - integration test?
 - split screen? maybe too complicated
+    process.stdout.columns
+    process.stdout.rows
+    https://nodejs.org/api/tty.html#tty_tty
+    https://github.com/chjj/pty.js/blob/master/lib/pty.js#L354
