@@ -54,7 +54,7 @@ export interface Config {
 }
 
 const defaultKeys: Keys = {
-    TOGGLE_PROCESS: '\u0000', // ctrl+space
+    TOGGLE_PROCESS: '.', // ctrl+space
     KILL_PROCESS: '\u0003', // ctrl+c
     TOGGLE_DASHBOARD: '\u0009', // tab
     NEXT_SCREEN: '>',

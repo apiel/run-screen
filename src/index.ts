@@ -14,7 +14,7 @@ if (!args.length) {
 
     ${dim(`You can have up to 10 process in parallel, switching from one screen to the other by the numeric key of your keyboard, from 1 to 10.
     To exit, press key combination "ctrl+c"
-    Stop/start process, press key combination "ctrl+space"
+    Stop/start process, press key "."
     Next screen, press key ">"
     Previous screen, press key "<"
     Dashboard, press key "tab"`)}

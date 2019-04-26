@@ -33,7 +33,7 @@ ${color_1.red(message)}
     process.exit();
 }
 const defaultKeys = {
-    TOGGLE_PROCESS: '\u0000',
+    TOGGLE_PROCESS: '.',
     KILL_PROCESS: '\u0003',
     TOGGLE_DASHBOARD: '\u0009',
     NEXT_SCREEN: '>',

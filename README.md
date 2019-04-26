@@ -14,12 +14,12 @@ run-screen "command 1" "command 2" "command 3" "... bis 10"
 
 To exit, press key combination `ctrl+c`
 
-To stop a process, press key combination `ctrl+space`, start again the process by pressing again `ctrl+space`
+To stop a process, press key combination `.`, start again the process by pressing again `.`
 
 ## Action keys
 
 - To exit, press key combination `ctrl+c`
-- Stop/start process, press key combination `ctrl+space`
+- Stop/start process, press key `.`
 - Next screen, press key `>`
 - Previous screen, press key `<`
 - Dashboard, press key `tab`, and press `tab` again to come back to the previous screen
