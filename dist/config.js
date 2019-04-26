@@ -39,6 +39,13 @@ const defaultKeys = {
     NEXT_SCREEN: '>',
     PREV_SCREEN: '<',
 };
+exports.helpinfo = `
+    You can have up to 10 process in parallel, switching from one screen to the other by the numeric key of your keyboard, from 1 to 10.
+    To exit, press key combination "ctrl+c"
+    Stop/start process, press key "."
+    Next screen, press key ">"
+    Previous screen, press key "<"
+    Dashboard, press key "tab"`;
 function loadConfig(args) {
     if (path_1.extname(args[0]) === '.js') {
         return loadConfigFromFile(args[0]);

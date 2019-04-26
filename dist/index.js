@@ -10,13 +10,7 @@ if (!args.length) {
     console.log(`No command to run.
 
 > run-screen "command 0" "command 1" "command 2" "... bis 9"
-
-    ${color_1.dim(`You can have up to 10 process in parallel, switching from one screen to the other by the numeric key of your keyboard, from 1 to 10.
-    To exit, press key combination "ctrl+c"
-    Stop/start process, press key "."
-    Next screen, press key ">"
-    Previous screen, press key "<"
-    Dashboard, press key "tab"`)}
+${color_1.dim(config_1.helpinfo)}
     `);
     process.exit();
 }

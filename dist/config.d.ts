@@ -15,4 +15,5 @@ export interface Config {
     keys: Keys;
     screens: ScreenConfig[];
 }
+export declare const helpinfo = "\n    You can have up to 10 process in parallel, switching from one screen to the other by the numeric key of your keyboard, from 1 to 10.\n    To exit, press key combination \"ctrl+c\"\n    Stop/start process, press key \".\"\n    Next screen, press key \">\"\n    Previous screen, press key \"<\"\n    Dashboard, press key \"tab\"";
 export declare function loadConfig(args: string[]): Config;

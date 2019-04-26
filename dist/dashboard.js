@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const color_1 = require("./color");
+const config_1 = require("./config");
 const digit = (value) => color_1.color(45, ` ${value} `);
 function dashboard(screens) {
     console.clear();
@@ -11,6 +12,7 @@ function dashboard(screens) {
         const newData = missedOutput ? color_1.green(' new') : '';
         process.stdout.write(`${digit(index + 1)} ${cmd}${error}${stopped}${newData}\n`);
     });
+    process.stdout.write(color_1.dim(`${config_1.helpinfo}\n`));
 }
 exports.dashboard = dashboard;
 //# sourceMappingURL=dashboard.js.map

@@ -1,5 +1,6 @@
 import { Screen } from './RunScreen';
 import { color, dim, red, green } from './color';
+import { helpinfo } from './config';
 
 const digit = (value: number) => color(45, ` ${value} `);
 
@@ -14,4 +15,6 @@ export function dashboard(screens: Screen[]) {
         const newData = missedOutput ? green(' new') : '';
         process.stdout.write(`${digit(index + 1)} ${cmd}${error}${stopped}${newData}\n`);
     });
+
+    process.stdout.write(dim(`${helpinfo}\n`));
 }
