@@ -100,3 +100,32 @@ module.exports = {
     screens: [...],
 }
 ```
+
+### Wait for port
+
+Another example, waiting for a port to open, before to start the command:
+
+First install `wait-on` library
+```bash
+yarn add wait-on --dev
+```
+
+example-wait-on.config.js
+```js
+const waitOn = require('wait-on');
+
+module.exports = {
+    screens: [
+        {
+            before: () => waitOn({ resources: ['tcp:3000']}),
+            cmd: 'yarn foo',
+        },
+        // ...
+    ],
+}
+```
+
+run example
+```bash
+run-screen example-wait-on.config.js
+```
