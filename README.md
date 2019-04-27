@@ -26,7 +26,7 @@ To stop a process, press key combination `.`, start again the process by pressin
 
 ## Dashboard
 
-![screenshot-dashboard](https://github.com/apiel/run-screen/blob/master/screenshots/screenshot-dashboard.png?raw=true)
+![screenshot-dashboard](https://github.com/apiel/run-screen/blob/master/screenshots/run-screen.gif?raw=true)
 
 The dashboard give you an overview of all the screens. If a new error happen on a screen, it will be shown.
 

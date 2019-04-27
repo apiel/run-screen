@@ -7,4 +7,4 @@ setInterval(() => {
     } else {
         process.stdout.write(`Refresh ${count++}\n`);
     }
-}, 1000);
+}, 3000);
