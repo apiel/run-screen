@@ -14,7 +14,9 @@ const std_1 = require("./std");
 class RunScreen {
     constructor(config) {
         this.config = config;
-        this.spawnOptions = {};
+        this.spawnOptions = {
+            env: Object.assign({ COLUMNS: process.stdout.columns.toString(), LINES: process.stdout.rows.toString() }, process.env),
+        };
         this.dataHistorySize = 100;
         this.activeScreen = 0;
         this.screens = [];

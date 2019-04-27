@@ -11,6 +11,11 @@ export { Screen, Data } from './types';
 export class RunScreen {
     spawnOptions: SpawnOptions = {
         // cwd: process.cwd(),
+        env: {
+            COLUMNS: process.stdout.columns.toString(),
+            LINES: process.stdout.rows.toString(),
+            ...process.env,
+        },
     };
     dataHistorySize = 100;
     activeScreen = 0;
