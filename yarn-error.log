@@ -1,5 +1,5 @@
 Arguments: 
-  /home/alex/.nvm/versions/node/v11.10.1/bin/node /usr/local/bin/yarn add @types/pidtree --dev
+  /home/alex/.nvm/versions/node/v11.10.1/bin/node /usr/local/bin/yarn publish
 
 PATH: 
   /home/alex/.nvm/versions/node/v11.10.1/bin:/home/alex/.cargo/bin:/home/alex/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/alex/dev/esp/esp-open-sdk/xtensa-lx106-elf/bin:/home/alex/dev/esp/esp-open-sdk/esptool:/home/alex/dev/esp/esp-open-sdk/xtensa-lx106-elf/bin:/home/alex/dev/esp/esp-open-sdk/esptool:/home/alex/dev/nrf5/gcc-arm-none-eabi-7-2017-q4-major/bin:/home/alex/dev/nrf5/nRF5x-Command-Line-Tools_9_7_2_Linux-x86_64/nrfjprog
@@ -16,7 +16,7 @@ Platform:
 npm manifest: 
   {
       "name": "run-screen",
-      "version": "0.0.3",
+      "version": "0.5.1",
       "main": "dist/index.js",
       "types": "dist/index.d.ts",
       "author": "Alexandre Piel <alexandre.piel@gmail.com>",
@@ -37,7 +37,9 @@ npm manifest:
       ],
       "scripts": {
           "foo": "node test/index.js",
-          "test": "run-screen 'yarn foo' 'yarn foo'",
+          "test1": "yarn build && run-screen 'yarn foo' 'yarn foo error'",
+          "test2": "yarn build && run-screen 'watch uptime' htop",
+          "testConfig": "yarn build && run-screen example.config.js",
           "prepublishOnly": "yarn build",
           "start": "ts-node src/index.ts",
           "prebuild": "rm -rf dist/",
@@ -105,9 +107,13 @@ Lockfile:
     version "3.0.3"
     resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   
-  "@types/node@*", "@types/node@^11.12.2":
+  "@types/node@*":
     version "11.13.6"
     resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.6.tgz#37ec75690830acb0d74ce3c6c43caab787081e85"
+  
+  "@types/node@^11.12.2":
+    version "11.13.7"
+    resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.7.tgz#85dbb71c510442d00c0631f99dae957ce44fd104"
   
   "@types/rimraf@^2.0.2":
     version "2.0.2"
@@ -409,8 +415,8 @@ Lockfile:
       tslib "^1.8.1"
   
   typescript@^3.2.4:
-    version "3.4.4"
-    resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.4.tgz#aac4a08abecab8091a75f10842ffa0631818f785"
+    version "3.4.5"
+    resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.5.tgz#2d2618d10bb566572b8d7aad5180d84257d70a99"
   
   which@^1.2.9:
     version "1.3.1"
@@ -427,14 +433,14 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/yn/-/yn-3.1.0.tgz#fcbe2db63610361afcc5eb9e0ac91e976d046114"
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fpidtree: Not found
-      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:62027:18)
-      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:123011:22)
-      at Request.emit (events.js:197:13)
-      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:123994:10)
-      at Request.emit (events.js:197:13)
-      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:123914:12)
-      at Object.onceWrapper (events.js:285:13)
-      at IncomingMessage.emit (events.js:202:15)
-      at endReadableNT (_stream_readable.js:1129:12)
-      at processTicksAndRejections (internal/process/next_tick.js:76:17)
+  Error: canceled
+      at Interface.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:120971:13)
+      at Interface.emit (events.js:197:13)
+      at Interface._ttyWrite (readline.js:799:16)
+      at ReadStream.onkeypress (readline.js:184:10)
+      at ReadStream.emit (events.js:197:13)
+      at emitKeys (internal/readline.js:424:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1071:36)
+      at ReadStream.emit (events.js:197:13)
+      at addChunk (_stream_readable.js:288:12)
