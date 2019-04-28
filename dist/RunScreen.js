@@ -15,7 +15,8 @@ class RunScreen {
     constructor(config) {
         this.config = config;
         this.spawnOptions = {
-            env: Object.assign({ COLUMNS: process.stdout.columns.toString(), LINES: process.stdout.rows.toString() }, process.env),
+            env: Object.assign({ FORCE_COLOR: 'true', COLUMNS: process.stdout.columns.toString(), LINES: process.stdout.rows.toString() }, process.env),
+            shell: true,
         };
         this.dataHistorySize = 100;
         this.activeScreen = 0;

@@ -12,10 +12,12 @@ export class RunScreen {
     spawnOptions: SpawnOptions = {
         // cwd: process.cwd(),
         env: {
+            FORCE_COLOR: 'true',
             COLUMNS: process.stdout.columns.toString(),
             LINES: process.stdout.rows.toString(),
             ...process.env,
         },
+        shell: true,
     };
     dataHistorySize = 100;
     activeScreen = 0;
