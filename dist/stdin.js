@@ -25,11 +25,11 @@ function toggleProcess(runScreen) {
         const screen = screens[activeScreen];
         if (screen) {
             if (screen.proc) {
-                std_1.stdout(runScreen, activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
+                std_1.stdout(runScreen, activeScreen, `\n\n > stop process: ${screen.config.cmd}\n\n`);
                 yield utils_1.kill(screen);
             }
             else {
-                std_1.stdout(runScreen, activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
+                std_1.stdout(runScreen, activeScreen, `\n\n > start process: ${screen.config.cmd}\n\n`);
                 runScreen.screens[activeScreen] = yield runScreen.startScreen(screen);
             }
         }

@@ -1,6 +1,6 @@
 {
     "name": "run-screen",
-    "version": "0.5.2",
+    "version": "0.5.4",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "author": "Alexandre Piel <alexandre.piel@gmail.com>",
@@ -33,8 +33,7 @@
     "dependencies": {
         "cross-spawn": "^6.0.5",
         "pidtree": "^0.3.0",
-        "shell-quote": "^1.6.1",
-        "typescript": "^3.2.4"
+        "shell-quote": "^1.6.1"
     },
     "devDependencies": {
         "@types/cross-spawn": "^6.0.0",
@@ -43,6 +42,7 @@
         "@types/shell-quote": "^1.6.1",
         "rimraf": "^2.6.3",
         "ts-node": "^8.0.3",
-        "tslint": "^5.12.1"
+        "tslint": "^5.12.1",
+        "typescript": "^3.9.2"
     }
 }

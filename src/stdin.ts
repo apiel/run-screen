@@ -18,10 +18,10 @@ export async function toggleProcess(runScreen: RunScreen) {
     const screen = screens[activeScreen];
     if (screen) {
         if (screen.proc) {
-            stdout(runScreen, activeScreen, `\n\nctrl+space > stop process: ${screen.config.cmd}\n\n`);
+            stdout(runScreen, activeScreen, `\n\n > stop process: ${screen.config.cmd}\n\n`);
             await kill(screen);
         } else {
-            stdout(runScreen, activeScreen, `\n\nctrl+space > start process: ${screen.config.cmd}\n\n`);
+            stdout(runScreen, activeScreen, `\n\n > start process: ${screen.config.cmd}\n\n`);
             runScreen.screens[activeScreen] = await runScreen.startScreen(screen);
         }
     }
