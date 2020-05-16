@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.loadConfig = exports.helpinfo = void 0;
 const path_1 = require("path");
 const color_1 = require("./color");
 function invalidConfigFormat(message) {
@@ -67,7 +68,7 @@ function loadConfigFromFile(file) {
     if (!screens.length) {
         invalidConfigFormat('Commands are missings in screens');
     }
-    const keys = config.keys ? Object.assign({}, defaultKeys, config.keys) : defaultKeys;
+    const keys = config.keys ? Object.assign(Object.assign({}, defaultKeys), config.keys) : defaultKeys;
     return {
         keys,
         screens,

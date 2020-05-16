@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.stderr = exports.stdout = exports.stdWrite = void 0;
 const dashboard_1 = require("./dashboard");
 const HISTORY_SIZE = 100;
 function stdWrite(runScreen, writeStream, id, data) {

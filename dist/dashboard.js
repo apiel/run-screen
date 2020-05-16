@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.dashboard = void 0;
 const color_1 = require("./color");
 const config_1 = require("./config");
 const digit = (value) => color_1.color(45, ` ${value} `);
